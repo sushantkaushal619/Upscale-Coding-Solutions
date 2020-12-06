@@ -1,0 +1,102 @@
+package test;
+
+class Node {
+	  Node left;
+	  Node right;
+	  int data;
+	}
+
+	class BinaryTree {
+
+	  public int printElementsAtKDistance(Node node, Node targetNode, int k) {
+	    if (node == null || targetNode == null || k < 0) {
+	      return -1;
+	    }
+
+	    return printElements(node, targetNode, k);
+	  }
+
+	  public int printElements(Node node, Node targetNode, int k) {
+	    if(node == null) {
+	      return -1;
+	    }
+	  
+	    if(node == targetNode) {
+	      printNodesAtKDistanceFromParent(node, k);
+	      return 0;
+	    }
+	    
+	    int leftDist = printElements(node.left, targetNode, k);
+	    
+	    if(leftDist != -1) {
+	      if(leftDist + 1 == k) {
+	        System.out.print(node.data + " ");
+	      } else {
+	        printNodesAtKDistanceFromParent(node.right, k - 2 - leftDist);
+	      }
+	      
+	      return leftDist + 1; 
+	    }
+	    
+	    int rightDist = printElements(node.right, targetNode, k);
+	    
+	    if(rightDist != -1) {
+	      if(rightDist + 1 == k) {
+	        System.out.print(node.data + " ");
+	      } else {
+	        printNodesAtKDistanceFromParent(node.left, k - 2 - rightDist);
+	      }
+	      
+	      return rightDist + 1; 
+	    }
+	    
+	    return -1;
+	  }
+
+	  public void printNodesAtKDistanceFromParent(Node node, int k) {
+	    if (node == null) {
+	      return;
+	    }
+
+	    if (k == 0) {
+	      System.out.print(node.data + " ");
+	    }
+
+	    printNodesAtKDistanceFromParent(node.left, k - 1);
+	    printNodesAtKDistanceFromParent(node.right, k - 1);
+	  }
+
+	  public Node createNewNode(int val) {
+	    Node newNode = new Node();
+	    newNode.data = val;
+	    newNode.left = null;
+	    newNode.right = null;
+	    return newNode;
+	  }
+	}
+
+	public class distanceK {
+
+	  public static void main(String[] args) {
+
+	    BinaryTree a = new BinaryTree();
+
+	    Node root = a.createNewNode(20);
+	    root.left = a.createNewNode(8);
+	    root.right = a.createNewNode(22);
+	    root.left.left = a.createNewNode(4);
+	    root.left.right = a.createNewNode(12);
+	    root.left.right.left = a.createNewNode(10);
+	    root.left.right.right = a.createNewNode(14);
+	    
+	    int kthDistance=3;
+	    Node target=root.left.right.right;  // Node 14
+	    Node parent=root; 					// Node 20
+	    
+	    int elements = a.printElementsAtKDistance(parent, target, kthDistance);
+	    
+	    if(elements == -1) {
+	      System.out.println("No elements found");
+	    }
+	  }
+	}
